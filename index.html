@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sistem Generator SPT - Ogan Komering Ulu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --primary: #1e40af;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --accent-blue: #2563eb;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body { background-color: var(--bg-main); color: var(--text-main); line-height: 1.5; padding-bottom: 40px; }
+
+    .app-header {
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-container {
+      max-width: 1200px; margin: 0 auto; padding: 14px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-logo {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--accent-blue));
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 16px;
+    }
+
+    .brand-text h1 { font-size: 16px; font-weight: 700; color: var(--primary); }
+    .brand-text p { font-size: 12px; color: var(--text-muted); }
+
+    .nav-tabs {
+      display: flex; gap: 6px; background: var(--bg-main);
+      padding: 4px; border-radius: 8px; border: 1px solid var(--border-color);
+    }
+
+    .nav-btn {
+      padding: 8px 16px; border: none; background: transparent; color: var(--text-muted);
+      font-weight: 500; font-size: 13px; border-radius: 6px; cursor: pointer;
+      transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .nav-btn:hover { color: var(--primary); }
+    .nav-btn.active { background-color: var(--primary); color: #ffffff; box-shadow: var(--shadow-sm); }
+    
+    .header-auth { margin-left: auto; }
+
+    .container { max-width: 1200px; margin: 24px auto 0; padding: 0 20px; }
+    .card {
+      background-color: var(--bg-card); border: 1px solid var(--border-color);
+      border-radius: var(--radius); box-shadow: var(--shadow-sm);
+      padding: 24px; margin-bottom: 24px;
+    }
+    .card-header {
+      margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    }
+    .card-header h2 { font-size: 17px; font-weight: 600; color: var(--text-main); }
+    .card-header p { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 13px; font-weight: 500; color: var(--text-main); }
+    .required { color: var(--danger); }
+    input, textarea, select {
+      width: 100%; padding: 10px 14px; border: 1px solid var(--border-color);
+      border-radius: 6px; font-size: 14px; color: var(--text-main); background-color: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    textarea { resize: vertical; min-height: 80px; }
+
+    .nomor-input-container {
+      display: flex; align-items: center; gap: 8px; background: #f1f5f9;
+      padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color); flex-wrap: wrap;
+    }
+    .nomor-prefix { font-weight: 600; font-size: 13px; color: var(--primary); }
+    .nomor-input-container input { width: 120px; background: #fff; text-align: center; font-weight: 600; }
+
+    .checklist-box {
+      border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; background: var(--bg-main); margin-bottom: 20px;
+    }
+    .checklist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 10px; flex-wrap: wrap; }
+    .checklist-search { max-width: 320px; }
+    .checklist-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; max-height: 280px; overflow-y: auto; padding-right: 6px; }
+
+    .pegawai-card {
+      background: #ffffff; border: 1px solid var(--border-color); border-radius: 6px;
+      padding: 10px 12px; display: flex; align-items: flex-start; gap: 10px;
+      cursor: pointer; transition: all 0.15s ease;
+    }
+    .pegawai-card:hover { border-color: var(--accent-blue); background-color: var(--primary-light); }
+    .pegawai-card input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--primary); cursor: pointer; }
+    .pegawai-info h4 { font-size: 13px; font-weight: 600; color: var(--text-main); }
+    .pegawai-info p { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 10px 18px; font-size: 13px; font-weight: 500; border-radius: 6px;
+      border: none; cursor: pointer; transition: all 0.2s; text-decoration: none;
+    }
+    .btn-primary { background-color: var(--primary); color: #ffffff; }
+    .btn-primary:hover { background-color: var(--primary-hover); }
+    .btn-secondary { background-color: #ffffff; border: 1px solid var(--border-color); color: var(--text-main); }
+    .btn-secondary:hover { background-color: var(--bg-main); }
+    .btn-accent { background-color: #0284c7; color: #ffffff; }
+    .btn-accent:hover { background-color: #0369a1; }
+    .btn-success { background-color: #059669; color: #fff; }
+    .btn-danger-outline { background-color: transparent; border: 1px solid #fecaca; color: var(--danger); }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+    .table-responsive { width: 100%; overflow-x: auto; border-radius: 6px; border: 1px solid var(--border-color); }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    thead { background-color: var(--bg-main); border-bottom: 1px solid var(--border-color); }
+    th { padding: 12px 14px; font-weight: 600; color: var(--text-main); white-space: nowrap; }
+    td { padding: 12px 14px; border-bottom: 1px solid var(--border-color); color: var(--text-main); vertical-align: middle; }
+    tbody tr:hover { background-color: var(--primary-light); }
+
+    .badge { display: inline-flex; padding: 3px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; }
+    .badge-success { background-color: #d1fae5; color: #065f46; }
+    .badge-danger { background-color: #fee2e2; color: #991b1b; }
+
+    .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .toolbar-left, .toolbar-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; gap: 10px; font-size: 13px; color: var(--text-muted); }
+
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(2px);
+      display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; visibility: hidden;
+      transition: all 0.2s ease; padding: 16px;
+    }
+    .modal-overlay.open { opacity: 1; visibility: visible; }
+    .modal-card { background: #ffffff; width: 100%; max-width: 520px; border-radius: var(--radius); box-shadow: var(--shadow-md); overflow: hidden; transform: scale(0.95); transition: transform 0.2s ease; }
+    .modal-card.preview-large { max-width: 900px; height: 88vh; display: flex; flex-direction: column; }
+    .modal-overlay.open .modal-card { transform: scale(1); }
+    .modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+    .modal-header h3 { font-size: 16px; font-weight: 600; color: var(--text-main); }
+    .modal-body { padding: 20px; }
+    .modal-card.preview-large .modal-body { flex: 1; padding: 0; background: #f1f5f9; }
+    .modal-footer { padding: 12px 20px; background: var(--bg-main); border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; }
+
+    .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 150; display: flex; flex-direction: column; gap: 8px; }
+    .toast { padding: 12px 18px; background: #1e293b; color: #ffffff; border-radius: 6px; font-size: 13px; box-shadow: var(--shadow-md); display: flex; align-items: center; gap: 10px; animation: slideIn 0.3s ease forwards; }
+    .toast.success { background: #065f46; border-left: 4px solid #34d399; }
+    .toast.error { background: #991b1b; border-left: 4px solid #f87171; }
+    .toast.info { background: #1e40af; border-left: 4px solid #60a5fa; }
+    @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    .loading-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top-color: #fff; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .result-box { margin-top: 20px; padding: 18px; border-radius: 8px; background: var(--primary-light); border: 1px solid #bfdbfe; display: none; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-logo">OKU</div>
+        <div class="brand-text">
+          <h1>Sistem Generator SPT (Letter F4)</h1>
+          <p>Sekretariat Daerah Kabupaten Ogan Komering Ulu</p>
+        </div>
+      </div>
+      <nav class="nav-tabs">
+        <button class="nav-btn active" onclick="switchTab('tab-generator')">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 20 20"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"/><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"/></svg>
+          Generator SPT
+        </button>
+        <button class="nav-btn admin-only" id="navRiwayat" onclick="switchTab('tab-riwayat')" style="display: none;">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
+          Riwayat & Cetak Ulang
+        </button>
+        <button class="nav-btn admin-only" id="navPegawai" onclick="switchTab('tab-pegawai')" style="display: none;">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/></svg>
+          Master Pegawai
+        </button>
+      </nav>
+      <div class="header-auth" style="margin-left: 10px;">
+        <button id="btnAuthToggle" class="btn btn-secondary btn-sm" onclick="openLoginModal()">Login Admin</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="tab-generator" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>Buat Surat Perintah Tugas Baru (F4 22 x 33 cm)</h2>
+            <p>Format resmi Setda Kabupaten Ogan Komering Ulu sesuai tata naskah dinas.</p>
+          </div>
+        </div>
+
+        <form id="formSpt" onsubmit="handleGenerateSpt(event)">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Nomor Index Surat Tugas <span class="required">*</span></label>
+              <div class="nomor-input-container">
+                <span class="nomor-prefix">800.1.11 /</span>
+                <input type="text" id="sptNomorUrut" required placeholder="No. Urut">
+                <span class="nomor-prefix">/ XI /</span>
+                <input type="text" id="sptTahunSurat" required placeholder="Tahun">
+              </div>
+            </div>
+
+            <div class="form-group full">
+              <label>Pejabat Penandatangan Surat Tugas <span class="required">*</span></label>
+              <select id="sptPenandatangan" required>
+                <option value="">-- Pilih Pejabat Penandatangan --</option>
+              </select>
+            </div>
+
+            <div class="form-group full">
+              <label>Dasar Penugasan <span class="required">*</span></label>
+              <textarea id="sptDasar" required placeholder="Contoh: Undangan dari Dewan..."></textarea>
+            </div>
+
+            <div class="form-group full">
+              <label>Untuk Melaksanakan <span class="required">*</span></label>
+              <textarea id="sptUntuk" required placeholder="Contoh: Mengikuti Rapat Koordinasi..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Tujuan / Lokasi Penugasan <span class="required">*</span></label>
+              <input type="text" id="sptTujuan" required placeholder="Contoh: Sentul, Bogor">
+            </div>
+
+            <div class="form-group">
+              <label>Tanggal Pelaksanaan <span class="required">*</span></label>
+              <input type="text" id="sptTanggalTugas" required placeholder="Contoh: 5 – 8 November 2024">
+            </div>
+
+            <div class="form-group full">
+              <label>Tanggal Penandatanganan <span class="required">*</span></label>
+              <input type="text" id="sptTanggalTtd" required placeholder="Contoh: 4 November 2024">
+            </div>
+          </div>
+
+          <div class="checklist-box">
+            <div class="checklist-header">
+              <div>
+                <label style="font-size: 14px; font-weight: 600;">Pilih Pegawai yang Ditugaskan <span class="required">*</span></label>
+              </div>
+              <input type="text" id="searchChecklist" class="checklist-search" placeholder="Cari pegawai..." oninput="filterChecklistPegawai()">
+            </div>
+            <div id="checklistItems" class="checklist-items"></div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 12px;">
+            <button type="reset" class="btn btn-secondary">Reset Formulir</button>
+            <button type="submit" id="btnSubmitSpt" class="btn btn-primary">
+              <span id="btnSptText">Generate SPT (Letter F4 22x33 cm)</span>
+            </button>
+          </div>
+        </form>
+
+        <div id="resultBoxSpt" class="result-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="color: var(--primary); font-size: 15px; font-weight: 600;">SPT Berhasil Diterbitkan!</h3>
+            <span id="resIdSpt" class="badge badge-success"></span>
+          </div>
+          <p id="resDescSpt" style="font-size: 13px; margin-bottom: 14px;"></p>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button type="button" class="btn btn-accent btn-sm" onclick="openPreviewModal(lastGeneratedPreviewUrl)">Preview Dokumen</button>
+            <a id="btnDownloadDocx" href="#" target="_blank" class="btn btn-secondary btn-sm">Unduh Word (.docx)</a>
+            <a id="btnDownloadPdf" href="#" target="_blank" class="btn btn-primary btn-sm">Unduh PDF</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-riwayat" class="tab-content" style="display: none;">
+      <div class="card">
+        <div class="card-header"><div><h2>Riwayat SPT</h2></div></div>
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <input type="text" id="searchRiwayat" placeholder="Cari..." style="width: 260px;" onkeyup="debounceRiwayatSearch()">
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="loadRiwayat(1)">Refresh Data</button>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead><tr><th>No. SPT</th><th>Pegawai</th><th>Penandatangan</th><th>Tujuan</th><th>Aksi</th></tr></thead>
+            <tbody id="tableRiwayatBody"></tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <span id="riwayatPageInfo">Menampilkan data...</span>
+          <div style="display: flex; gap: 6px;">
+            <button id="btnPrevRiwayat" class="btn btn-secondary btn-sm" onclick="prevRiwayatPage()" disabled>Sebelumnya</button>
+            <button id="btnNextRiwayat" class="btn btn-secondary btn-sm" onclick="nextRiwayatPage()" disabled>Selanjutnya</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-pegawai" class="tab-content" style="display: none;">
+      <div class="card">
+        <div class="card-header">
+          <div><h2>Master Pegawai</h2></div>
+          <button class="btn btn-primary btn-sm" onclick="openModalPegawai()">+ Tambah Pegawai</button>
+        </div>
+        <div class="toolbar">
+          <input type="text" id="searchPegawai" placeholder="Cari Pegawai..." style="width: 280px;" onkeyup="debouncePegawaiSearch()">
+          <button class="btn btn-secondary btn-sm" onclick="loadPegawaiTable(1)">Refresh Data</button>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead><tr><th>Nama</th><th>NIP</th><th>Pangkat</th><th>Jabatan</th><th>Status</th><th>Aksi</th></tr></thead>
+            <tbody id="tablePegawaiBody"></tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <span id="pegawaiPageInfo">Menampilkan data...</span>
+          <div style="display: flex; gap: 6px;">
+            <button id="btnPrevPegawai" class="btn btn-secondary btn-sm" onclick="prevPegawaiPage()" disabled>Sebelumnya</button>
+            <button id="btnNextPegawai" class="btn btn-secondary btn-sm" onclick="nextPegawaiPage()" disabled>Selanjutnya</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL PREVIEW -->
+  <div id="modalPreview" class="modal-overlay">
+    <div class="modal-card preview-large">
+      <div class="modal-header">
+        <h3 id="modalPreviewTitle">Pratinjau Dokumen</h3>
+        <button onclick="closePreviewModal()" style="background:none; border:none; font-size:20px; cursor:pointer;">&times;</button>
+      </div>
+      <div class="modal-body"><iframe id="iframePreview" src="about:blank" style="width: 100%; height: 100%; border: none;"></iframe></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="closePreviewModal()">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PEGAWAI -->
+  <div id="modalPegawai" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalPegawaiTitle">Data Pegawai</h3>
+        <button onclick="closeModalPegawai()" style="background:none; border:none; font-size:20px; cursor:pointer;">&times;</button>
+      </div>
+      <form id="formPegawaiModal" onsubmit="handleSavePegawai(event)">
+        <div class="modal-body">
+          <input type="hidden" id="modalPegawaiId">
+          <div class="form-group" style="margin-bottom:12px;"><label>Nama <span class="required">*</span></label><input type="text" id="modalPegawaiNama" required></div>
+          <div class="form-group" style="margin-bottom:12px;"><label>NIP</label><input type="text" id="modalPegawaiNip"></div>
+          <div class="form-group" style="margin-bottom:12px;"><label>Pangkat / Golongan <span class="required">*</span></label><input type="text" id="modalPegawaiGolongan" required></div>
+          <div class="form-group"><label>Jabatan <span class="required">*</span></label><input type="text" id="modalPegawaiJabatan" required></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeModalPegawai()">Batal</button>
+          <button type="submit" id="btnSavePegawai" class="btn btn-primary btn-sm">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL LOGIN -->
+  <div id="modalLogin" class="modal-overlay">
+    <div class="modal-card" style="max-width: 400px;">
+      <div class="modal-header">
+        <h3 id="modalLoginTitle">Login Administrator</h3>
+        <button onclick="closeLoginModal()" style="background:none; border:none; font-size:20px; cursor:pointer;">&times;</button>
+      </div>
+      <form id="formLogin" onsubmit="handleAuth(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Password Akses <span class="required">*</span></label>
+            <input type="password" id="inputAdminPassword" required autocomplete="off">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeLoginModal()">Batal</button>
+          <button type="submit" id="btnLoginSubmit" class="btn btn-primary btn-sm">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script>
+    // =======================================================================
+    // 1. MASUKKAN URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA DI BAWAH INI
+    // =======================================================================
+    const API_URL = "https://script.google.com/macros/s/AKfycbz2JFsR3louxoNJc_22ufF-BbHakOsBwKT_HijKZVE323qGlXCBLNRMEL7Me-nZ2vLj/exec"; // GANTI DENGAN URL ANDA
+
+    var activePegawaiCache = [];
+    var riwayatCurrentPage = 1, riwayatTotalPages = 1;
+    var pegawaiCurrentPage = 1, pegawaiTotalPages = 1;
+    var searchTimer = null;
+    var lastGeneratedPreviewUrl = '';
+    var isAdminLoggedIn = false; 
+
+    // --- Core API Fetch Function (Untuk Ngobrol ke Apps Script di luar sana) ---
+    function fetchAPI(action, data) {
+      if (!API_URL || API_URL.indexOf('AKfy') === -1) {
+        showToast('API_URL belum dikonfigurasi di file index.html!', 'error');
+        return Promise.resolve({ success: false, message: 'Missing API_URL' });
+      }
+      return fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: action, data: data })
+      })
+      .then(function(res) { return res.json(); })
+      .catch(function(err) { return { success: false, message: err.message }; });
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      var thnEl = document.getElementById('sptTahunSurat');
+      if (thnEl) thnEl.value = new Date().getFullYear();
+      loadActivePegawai();
+    });
+
+    function showToast(message, type) {
+      type = type || 'info';
+      var container = document.getElementById('toastContainer');
+      var toast = document.createElement('div');
+      toast.className = 'toast ' + type;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(function() { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 4000);
+    }
+
+    function switchTab(tabId) {
+      if ((tabId === 'tab-riwayat' || tabId === 'tab-pegawai') && !isAdminLoggedIn) {
+        showToast('Akses ditolak. Silakan login sebagai admin.', 'error');
+        return;
+      }
+      var tabs = ['tab-generator', 'tab-riwayat', 'tab-pegawai'];
+      var buttons = document.querySelectorAll('.nav-btn');
+      for (var i = 0; i < tabs.length; i++) {
+        var el = document.getElementById(tabs[i]);
+        if (el) el.style.display = (tabs[i] === tabId) ? 'block' : 'none';
+      }
+      var activeIndex = (tabId === 'tab-generator') ? 0 : (tabId === 'tab-riwayat') ? 1 : 2;
+      for (var j = 0; j < buttons.length; j++) {
+        if (j === activeIndex) buttons[j].classList.add('active');
+        else buttons[j].classList.remove('active');
+      }
+      if (tabId === 'tab-generator') loadActivePegawai();
+      else if (tabId === 'tab-riwayat') loadRiwayat(1);
+      else if (tabId === 'tab-pegawai') loadPegawaiTable(1);
+    }
+
+    // --- Modul Generator ---
+    function loadActivePegawai() {
+      var container = document.getElementById('checklistItems');
+      container.innerHTML = '<p style="font-size:13px; color:var(--text-muted);">Memuat data pegawai...</p>';
+      
+      fetchAPI('getActivePegawaiList', null).then(function(res) {
+        if (res && res.success) {
+          activePegawaiCache = res.data;
+          renderChecklistItems(activePegawaiCache);
+          populatePenandatanganSelect(activePegawaiCache);
+        } else {
+          container.innerHTML = '<p style="color:red;">Gagal memuat data. Periksa koneksi atau URL API Anda.</p>';
+        }
+      });
+    }
+
+    function populatePenandatanganSelect(items) {
+      var select = document.getElementById('sptPenandatangan');
+      var html = '<option value="">-- Pilih Pejabat Penandatangan --</option>';
+      for (var i = 0; i < items.length; i++) html += '<option value="' + items[i].id + '">' + items[i].nama + ' (' + items[i].jabatan + ')</option>';
+      select.innerHTML = html;
+    }
+
+    function renderChecklistItems(items) {
+      var container = document.getElementById('checklistItems');
+      if (!items || items.length === 0) { container.innerHTML = '<p>Tidak ada pegawai aktif.</p>'; return; }
+      var html = '';
+      for (var i = 0; i < items.length; i++) {
+        html += '<label class="pegawai-card" for="chk_' + items[i].id + '">' +
+                  '<input type="checkbox" id="chk_' + items[i].id + '" value="' + items[i].id + '" class="spt-pegawai-checkbox">' +
+                  '<div class="pegawai-info"><h4>' + items[i].nama + '</h4><p>NIP: ' + items[i].nip + '</p><p>' + items[i].golongan + ' &bull; ' + items[i].jabatan + '</p></div>' +
+                '</label>';
+      }
+      container.innerHTML = html;
+    }
+
+    function filterChecklistPegawai() {
+      var query = document.getElementById('searchChecklist').value.toLowerCase().trim();
+      var filtered = activePegawaiCache.filter(function(p) { return (p.nama + ' ' + p.nip + ' ' + p.jabatan).toLowerCase().indexOf(query) > -1; });
+      renderChecklistItems(filtered);
+    }
+
+    function handleGenerateSpt(event) {
+      event.preventDefault();
+      var checkboxes = document.querySelectorAll('.spt-pegawai-checkbox:checked');
+      var selectedIds = [];
+      for (var i = 0; i < checkboxes.length; i++) selectedIds.push(checkboxes[i].value);
+
+      if (selectedIds.length === 0) { showToast('Pilih minimal 1 pegawai!', 'error'); return; }
+      var penandatanganVal = document.getElementById('sptPenandatangan').value;
+      if (!penandatanganVal) { showToast('Pilih pejabat penandatangan!', 'error'); return; }
+
+      var payload = {
+        nomorUrut: document.getElementById('sptNomorUrut').value.trim(),
+        tahunSurat: document.getElementById('sptTahunSurat').value.trim(),
+        penandatanganId: penandatanganVal,
+        dasar: document.getElementById('sptDasar').value.trim(),
+        untuk: document.getElementById('sptUntuk').value.trim(),
+        tujuan: document.getElementById('sptTujuan').value.trim(),
+        tanggalTugas: document.getElementById('sptTanggalTugas').value.trim(),
+        tanggalTtd: document.getElementById('sptTanggalTtd').value.trim(),
+        pegawaiIds: selectedIds
+      };
+
+      var btnSubmit = document.getElementById('btnSubmitSpt');
+      var btnText = document.getElementById('btnSptText');
+      var resultBox = document.getElementById('resultBoxSpt');
+      
+      btnSubmit.disabled = true; 
+      btnText.innerHTML = '<span class="loading-spinner"></span> Menyusun Dokumen F4...'; 
+      resultBox.style.display = 'none';
+
+      fetchAPI('generateSPT', payload).then(function(res) {
+        btnSubmit.disabled = false; 
+        btnText.textContent = 'Generate SPT (Letter F4 22x33 cm)';
+        
+        if (res && res.success) {
+          showToast('Berhasil diterbitkan!', 'success');
+          document.getElementById('resIdSpt').textContent = res.data.nomorSpt;
+          document.getElementById('resDescSpt').textContent = 'Ditandatangani oleh ' + res.data.penandatangan + '.';
+          document.getElementById('btnDownloadDocx').href = res.data.urlDocx;
+          document.getElementById('btnDownloadPdf').href = res.data.urlPdf;
+          lastGeneratedPreviewUrl = res.data.urlPreview;
+          resultBox.style.display = 'block';
+          document.getElementById('formSpt').reset();
+          document.getElementById('sptTahunSurat').value = new Date().getFullYear();
+        } else { 
+          showToast('Gagal: ' + (res ? res.message : 'Unknown error'), 'error'); 
+        }
+      });
+    }
+
+    // --- Modul Riwayat ---
+    function loadRiwayat(page) {
+      riwayatCurrentPage = page || 1;
+      var tbody = document.getElementById('tableRiwayatBody');
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Memuat...</td></tr>';
+      
+      var params = { page: riwayatCurrentPage, limit: 8, search: document.getElementById('searchRiwayat').value.trim() };
+      
+      fetchAPI('getRiwayatSptPaged', params).then(function(res) {
+        if (res && res.success) {
+          riwayatTotalPages = res.totalPages;
+          if (!res.data || res.data.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Belum ada riwayat.</td></tr>'; return; }
+          var html = '';
+          for (var i = 0; i < res.data.length; i++) {
+            var row = res.data[i];
+            html += '<tr><td><div>' + row.nomorSpt + '</div><div style="font-size:11px;">' + row.tglInput + '</div></td>' +
+                    '<td>' + row.namaPegawai + '</td><td>' + row.penandatangan + '</td><td>' + row.tujuan + '</td>' +
+                    '<td><button class="btn btn-accent btn-sm" onclick="openPreviewModal(\'' + row.urlPreview + '\')">Preview</button></td></tr>';
+          }
+          tbody.innerHTML = html;
+          document.getElementById('riwayatPageInfo').textContent = 'Halaman ' + res.page + ' dari ' + res.totalPages;
+          document.getElementById('btnPrevRiwayat').disabled = (res.page <= 1);
+          document.getElementById('btnNextRiwayat').disabled = (res.page >= res.totalPages);
+        }
+      });
+    }
+
+    function prevRiwayatPage() { if (riwayatCurrentPage > 1) loadRiwayat(riwayatCurrentPage - 1); }
+    function nextRiwayatPage() { if (riwayatCurrentPage < riwayatTotalPages) loadRiwayat(riwayatCurrentPage + 1); }
+    function debounceRiwayatSearch() { clearTimeout(searchTimer); searchTimer = setTimeout(function() { loadRiwayat(1); }, 350); }
+
+    function openPreviewModal(url) {
+      if (!url) return;
+      document.getElementById('iframePreview').src = url;
+      document.getElementById('modalPreview').classList.add('open');
+    }
+    function closePreviewModal() { document.getElementById('modalPreview').classList.remove('open'); document.getElementById('iframePreview').src = 'about:blank'; }
+
+    // --- Modul Pegawai ---
+    function loadPegawaiTable(page) {
+      pegawaiCurrentPage = page || 1;
+      var tbody = document.getElementById('tablePegawaiBody');
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Memuat...</td></tr>';
+      
+      var params = { page: pegawaiCurrentPage, limit: 10, search: document.getElementById('searchPegawai').value.trim() };
+      
+      fetchAPI('getPegawaiPaged', params).then(function(res) {
+        if (res && res.success) {
+          pegawaiTotalPages = res.totalPages;
+          if (!res.data || res.data.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Data kosong.</td></tr>'; return; }
+          var html = '';
+          for (var i = 0; i < res.data.length; i++) {
+            var p = res.data[i];
+            var isAktif = (p.status === 'AKTIF' || !p.status);
+            html += '<tr><td>' + p.nama + '</td><td>' + p.nip + '</td><td>' + p.golongan + '</td><td>' + p.jabatan + '</td>' +
+                    '<td><span id="badge-' + p.id + '" class="badge ' + (isAktif ? 'badge-success' : 'badge-danger') + '">' + (isAktif ? 'AKTIF' : 'NONAKTIF') + '</span></td>' +
+                    '<td><button class="btn btn-secondary btn-sm" onclick="editPegawaiRow(\'' + p.id + '\', \'' + p.nama + '\', \'' + p.nip + '\', \'' + p.golongan + '\', \'' + p.jabatan + '\')">Edit</button> ' +
+                    '<button id="btnToggle-' + p.id + '" class="btn btn-sm ' + (isAktif ? 'btn-danger-outline' : 'btn-success') + '" onclick="toggleStatusOptimistic(\'' + p.id + '\')">' + (isAktif ? 'Nonaktifkan' : 'Aktifkan') + '</button></td></tr>';
+          }
+          tbody.innerHTML = html;
+          document.getElementById('btnPrevPegawai').disabled = (res.page <= 1);
+          document.getElementById('btnNextPegawai').disabled = (res.page >= res.totalPages);
+        }
+      });
+    }
+
+    function prevPegawaiPage() { if (pegawaiCurrentPage > 1) loadPegawaiTable(pegawaiCurrentPage - 1); }
+    function nextPegawaiPage() { if (pegawaiCurrentPage < pegawaiTotalPages) loadPegawaiTable(pegawaiCurrentPage + 1); }
+    function debouncePegawaiSearch() { clearTimeout(searchTimer); searchTimer = setTimeout(function() { loadPegawaiTable(1); }, 350); }
+
+    function openModalPegawai() { document.getElementById('formPegawaiModal').reset(); document.getElementById('modalPegawaiId').value = ''; document.getElementById('modalPegawai').classList.add('open'); }
+    function closeModalPegawai() { document.getElementById('modalPegawai').classList.remove('open'); }
+    function editPegawaiRow(id, nama, nip, golongan, jabatan) {
+      document.getElementById('modalPegawaiId').value = id; document.getElementById('modalPegawaiNama').value = nama;
+      document.getElementById('modalPegawaiNip').value = (nip === '-' ? '' : nip); document.getElementById('modalPegawaiGolongan').value = golongan;
+      document.getElementById('modalPegawaiJabatan').value = jabatan; document.getElementById('modalPegawai').classList.add('open');
+    }
+
+    function handleSavePegawai(event) {
+      event.preventDefault();
+      var data = { id: document.getElementById('modalPegawaiId').value.trim(), nama: document.getElementById('modalPegawaiNama').value.trim(), nip: document.getElementById('modalPegawaiNip').value.trim(), golongan: document.getElementById('modalPegawaiGolongan').value.trim(), jabatan: document.getElementById('modalPegawaiJabatan').value.trim() };
+      var btn = document.getElementById('btnSavePegawai'); btn.disabled = true; btn.textContent = 'Menyimpan...';
+      
+      fetchAPI('savePegawai', data).then(function(res) {
+        btn.disabled = false; btn.textContent = 'Simpan'; closeModalPegawai(); 
+        showToast(res.message, res.success ? 'success' : 'error');
+        if(res.success) { loadPegawaiTable(pegawaiCurrentPage); loadActivePegawai(); }
+      });
+    }
+
+    function toggleStatusOptimistic(id) {
+      var badge = document.getElementById('badge-' + id); var btn = document.getElementById('btnToggle-' + id);
+      var isAktif = (badge.textContent.trim() === 'AKTIF'); var target = isAktif ? 'NONAKTIF' : 'AKTIF';
+      badge.textContent = target; badge.className = 'badge ' + (target === 'AKTIF' ? 'badge-success' : 'badge-danger');
+      btn.textContent = (target === 'AKTIF' ? 'Nonaktifkan' : 'Aktifkan'); btn.className = 'btn btn-sm ' + (target === 'AKTIF' ? 'btn-danger-outline' : 'btn-success');
+      
+      fetchAPI('togglePegawaiStatus', id).then(function(res) {
+        if(res.success) { showToast(res.message, 'info'); loadActivePegawai(); } 
+        else { badge.textContent = isAktif ? 'AKTIF' : 'NONAKTIF'; } // Rollback if failed
+      });
+    }
+
+    // --- FUNGSI LOGIN ADMIN ---
+    function openLoginModal() {
+      if (isAdminLoggedIn) {
+        isAdminLoggedIn = false;
+        document.getElementById('btnAuthToggle').textContent = 'Login Admin';
+        document.getElementById('navRiwayat').style.display = 'none';
+        document.getElementById('navPegawai').style.display = 'none';
+        switchTab('tab-generator');
+        showToast('Berhasil logout.', 'info');
+      } else {
+        document.getElementById('inputAdminPassword').value = '';
+        document.getElementById('modalLogin').classList.add('open');
+        setTimeout(function() { document.getElementById('inputAdminPassword').focus(); }, 100);
+      }
+    }
+
+    function closeLoginModal() { document.getElementById('modalLogin').classList.remove('open'); }
+
+    function handleAuth(event) {
+      event.preventDefault();
+      var pwd = document.getElementById('inputAdminPassword').value;
+      var btn = document.getElementById('btnLoginSubmit');
+      btn.disabled = true; btn.textContent = 'Memeriksa...';
+
+      fetchAPI('verifyAdmin', pwd).then(function(res) {
+        btn.disabled = false; btn.textContent = 'Login';
+        if (res && res.success) {
+          isAdminLoggedIn = true;
+          closeLoginModal();
+          document.getElementById('btnAuthToggle').textContent = 'Logout';
+          document.getElementById('navRiwayat').style.display = 'inline-flex';
+          document.getElementById('navPegawai').style.display = 'inline-flex';
+          showToast('Login Admin berhasil!', 'success');
+        } else {
+          showToast(res ? res.message : 'Password salah.', 'error');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
